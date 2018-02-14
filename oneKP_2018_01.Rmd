@@ -1,0 +1,62 @@
+---
+title: "oneKP - January 28, 2018"
+author: "Jessica Minnier"
+date: "1/28/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(devtools)
+library(tidyverse)
+```
+
+```{r install, eval=FALSE}
+install_github('arendsee/oneKP')
+
+# check downloaded package code
+devtools:: check(pkg="~/Downloads/onekp-master/")
+# use goodpractice
+goodpractice::gp(path = "~/Downloads/onekp-master/")
+```
+
+```{r}
+library(oneKP)
+```
+
+
+```{r}
+# I like the print results from onekp and seqs
+onekp <- retrieve_oneKP()
+head(onekp@table)
+# need to show in vignette how to list codes
+
+seqs <- filter_by_code(onekp, c('URDJ', 'ROAP'))
+download_peptides(seqs)
+download_nucleotides(seqs)
+
+
+filter_by_species(onekp, 'Pinus radiata')
+filter_by_clade(onekp, 'Brassicaceae')
+filter_by_clade(onekp, 3700)
+```
+
+```{r}
+onekp@table %>%
+    subset(grepl('lea[vf]', tissue, ignore.case=TRUE, perl=TRUE)) %>%
+    subset(grepl('stem', tissue, ignore.case=TRUE)) %>%
+    subset(grepl('flower', tissue, ignore.case=TRUE)) %>%
+    subset(!grepl('bud|fruit|young|apex|devel', tissue, ignore.case=TRUE, perl=TRUE)) %$%
+    tissue %>% unique %>% sort
+```
+```{r breakthings, eval=FALSE}
+# try to break things
+tmp <- filter_by_species(onekp,"foobar") # returns object with 0 0
+tmp
+str(tmp@table)
+
+download_nucleotides(tmp)
+#> Error in curl::curl_download(url = url, destfile = path, quiet = TRUE) : Argument 'url' must be string.
+```
+
+
