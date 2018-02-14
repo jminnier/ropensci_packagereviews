@@ -32,9 +32,11 @@ head(onekp@table)
 # need to show in vignette how to list codes
 
 seqs <- filter_by_code(onekp, c('URDJ', 'ROAP'))
-download_peptides(seqs)
-download_nucleotides(seqs)
-
+dp <-download_peptides(seqs)
+dn <- download_nucleotides(seqs)
+dp
+dn
+fs::dir_delete("oneKP")
 
 filter_by_species(onekp, 'Pinus radiata')
 filter_by_clade(onekp, 'Brassicaceae')
